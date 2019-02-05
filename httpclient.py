@@ -84,6 +84,7 @@ class HTTPClient(object):
         print("---")
 
         #Gotta re the answer
+        #Might wanna change the error check to something more general use
         if re.search("Error code: 404", answer) != None:
             code = 404
             print("match------------")
