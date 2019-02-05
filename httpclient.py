@@ -68,7 +68,36 @@ class HTTPClient(object):
         return buffer.decode('utf-8')
 
     def GET(self, url, args=None):
-        code = 500
+        o = urllib.parse.urlparse(url)
+        x = o.netloc.split(":")        
+        self.connect(x[0], int(x[1]))
+        #gotta close at some point
+
+        #sendall()
+        package = "GET / HTTP/1.1\r\nHost:" + x[0] + "\r\n\r\n"
+        self.sendall(package)
+
+        #recvall
+        answer = self.recvall(self.socket)
+        print("---")
+        print(answer)
+        print("---")
+
+        #Gotta re the answer
+        if re.search("Error code: 404", answer) != None:
+            code = 404
+            print("match------------")
+        else:
+            code = 500 #replace with actual code (200)
+            #z = re.split(, answer)
+
+        #close socket
+        self.close()
+
+        #translate recvall into code and body
+        #(kinda handeling this in re)
+        
+        #code = 500
         body = ""
         return HTTPResponse(code, body)
 
