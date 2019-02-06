@@ -69,41 +69,85 @@ class HTTPClient(object):
 
     def GET(self, url, args=None):
         o = urllib.parse.urlparse(url)
+        z = o.path
         x = o.netloc.split(":")        
         self.connect(x[0], int(x[1]))
-        #gotta close at some point
 
-        #sendall()
-        package = "GET / HTTP/1.1\r\nHost:" + x[0] + "\r\n\r\n"
+        package = "GET " + z + " HTTP/1.1\r\nHost:" + x[0] + "\r\n\r\n"
         self.sendall(package)
 
-        #recvall
         answer = self.recvall(self.socket)
+
+        #print("---")
+        #print(o)
+        #print("package:", package)
+        #print("url:", url)
+        print("---")
+        print("GET")
         print("---")
         print(answer)
         print("---")
 
-        #Gotta re the answer
         #Might wanna change the error check to something more general use
-        if re.search("Error code: 404", answer) != None:
+        if re.search("200 OK", answer) == None:
             code = 404
-            print("match------------")
+            body = ""
         else:
-            code = 500 #replace with actual code (200)
-            #z = re.split(, answer)
+            code = 200
+            body = "/abcdef/gjkd/dsadas" #hard-coded for now
 
-        #close socket
+        #print("Code:", code)
+
         self.close()
-
-        #translate recvall into code and body
-        #(kinda handeling this in re)
         
         #code = 500
-        body = ""
+        #body = ""
         return HTTPResponse(code, body)
 
     def POST(self, url, args=None):
-        code = 500
+        o = urllib.parse.urlparse(url)
+        z = o.path
+        x = o.netloc.split(":")        
+        self.connect(x[0], int(x[1]))
+
+        if args == None:
+            package = "POST " + z + " HTTP/1.1\r\nHost:" + x[0] + "\r\nContent-Length:0\r\n\r\n"
+        else:
+            q = 0
+            p = ""
+            for item in args:
+                q += len(args[item])
+                print("item:", item, "value:", args[item])
+                p += item + "=" + args[item] + "&"
+            p = p[:-1]
+            print(p)
+            package = "POST " + z + " HTTP/1.1\r\nHost:" + x[0] + "\r\nContent-Length:" + str(q) + "\r\n\r\n" + p
+        self.sendall(package)
+
+        answer = self.recvall(self.socket)
+
+        print("----")
+        print(args)
+        print("----")
+        print("POST")
+        print("----")
+        print(package)
+        print("----")
+        print(answer)
+        print("----")
+        
+
+        #Might wanna change the error check to something more general use
+        if re.search("200 OK", answer) == None:
+            code = 404
+        else:
+            code = 200
+
+        #print("Code:", code)
+
+        self.close()
+        
+        #code = 500
         body = ""
         return HTTPResponse(code, body)
 
