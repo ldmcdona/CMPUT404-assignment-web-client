@@ -88,7 +88,7 @@ class HTTPClient(object):
         #print("flag 3")
 
         answer = self.recvall(self.socket)
-        pdb.set_trace()
+        #pdb.set_trace()
 
         #print("---")
         #print(o)
@@ -148,32 +148,40 @@ class HTTPClient(object):
         self.sendall(package)
 
         answer = self.recvall(self.socket)
-
-        """
-        print("----")
-        print(args)
+       
+        #print("----")
+        #print(args)
         print("----")
         print("POST")
         print("----")
-        print(package)
-        print("----")
+        #print(package)
+        #print("----")
         print(answer)
-        print("----")
-        """
-        
+        print("----")     
 
         #Might wanna change the error check to something more general use
         if re.search("200 OK", answer) == None:
             code = 404
+            body = ""
+            if re.search("301 Moved Permanently", answer) != None:
+                code = 301
+            if re.search("302 Found", answer) != None:
+                code = 302
         else:
             code = 200
+            text = answer.split("\r\n\r\n")
+            body = ""
+            for i in range(len(text)):
+                if i != 0:
+                    body += text[i]
+            #print
 
         #print("Code:", code)
 
         self.close()
         
         #code = 500
-        body = ""
+        #body = ""
         return HTTPResponse(code, body)
 
     def command(self, url, command="GET", args=None):
