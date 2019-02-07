@@ -113,13 +113,12 @@ class HTTPClient(object):
         if args == None:
             package = "POST " + z + " HTTP/1.1\r\nHost:" + x[0] + "\r\nContent-Length:0\r\n\r\n"
         else:
-            q = 0
             p = ""
             for item in args:
-                q += len(args[item])
-                print("item:", item, "value:", args[item])
                 p += item + "=" + args[item] + "&"
             p = p[:-1]
+            q = len(p)
+            print("q", q)
             print(p)
             package = "POST " + z + " HTTP/1.1\r\nHost:" + x[0] + "\r\nContent-Length:" + str(q) + "\r\n\r\n" + p
         self.sendall(package)
