@@ -97,18 +97,27 @@ class HTTPClient(object):
         #print("---")
         #print("GET")
         #print("---")
-        #print(answer)
+        #print("answer:",answer)
         #print("---")
 
         #Might wanna change the error check to something more general use
         if re.search("200 OK", answer) == None:
             code = 404
             body = ""
-            if re.search("301", answer) != None:
+            if re.search("301 Moved Permanently", answer) != None:
                 code = 301
+            if re.search("302 Found", answer) != None:
+                code = 302
         else:
             code = 200
-            body = "/abcdef/gjkd/dsadas" #hard-coded for now
+            text = answer.split("\r\n\r\n")
+            body = ""
+            for i in range(len(text)):
+                if i != 0:
+                    body += text[i]
+            #print("body:", body)
+            #print("---")
+            #body = text[1]
 
         #print("Code:", code)
 
@@ -116,6 +125,7 @@ class HTTPClient(object):
         
         #code = 500
         #body = ""
+        #print("---")
         return HTTPResponse(code, body)
 
     def POST(self, url, args=None):
