@@ -88,7 +88,7 @@ class HTTPClient(object):
         #print("flag 3")
 
         answer = self.recvall(self.socket)
-        #pdb.set_trace()
+        pdb.set_trace()
 
         #print("---")
         #print(o)
@@ -149,6 +149,7 @@ class HTTPClient(object):
 
         answer = self.recvall(self.socket)
 
+        """
         print("----")
         print(args)
         print("----")
@@ -158,6 +159,7 @@ class HTTPClient(object):
         print("----")
         print(answer)
         print("----")
+        """
         
 
         #Might wanna change the error check to something more general use
