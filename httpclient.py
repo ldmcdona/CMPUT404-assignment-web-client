@@ -23,6 +23,7 @@ import socket
 import re
 # you may use urllib to encode data appropriately
 import urllib.parse
+import pdb
 
 def help():
     print("httpclient.py [GET/POST] [URL]\n")
@@ -68,30 +69,43 @@ class HTTPClient(object):
         return buffer.decode('utf-8')
 
     def GET(self, url, args=None):
+        #print("type:", type(url))
         o = urllib.parse.urlparse(url)
         z = o.path
-        x = o.netloc.split(":")        
-        self.connect(x[0], int(x[1]))
+        x = o.netloc.split(":")
+        #print("flag 1")
+        #print(o)
+        #print(x, type(x))
+        if len(x) > 1:
+            self.connect(x[0], int(x[1]))
+        else:
+            self.connect(x[0], 80)
+        #print("flag 2")
 
-        package = "GET " + z + " HTTP/1.1\r\nHost:" + x[0] + "\r\n\r\n"
+        package = "GET " + z + " HTTP/1.1\r\nHost: " + x[0] + "\r\nAccept: application/json\r\nAccept-Language: en-us\r\nContent-Type: application/json\r\n\r\n"
         self.sendall(package)
 
+        #print("flag 3")
+
         answer = self.recvall(self.socket)
+        #pdb.set_trace()
 
         #print("---")
         #print(o)
-        #print("package:", package)
+        #print("package:\n", package)
         #print("url:", url)
-        print("---")
-        print("GET")
-        print("---")
-        print(answer)
-        print("---")
+        #print("---")
+        #print("GET")
+        #print("---")
+        #print(answer)
+        #print("---")
 
         #Might wanna change the error check to something more general use
         if re.search("200 OK", answer) == None:
             code = 404
             body = ""
+            if re.search("301", answer) != None:
+                code = 301
         else:
             code = 200
             body = "/abcdef/gjkd/dsadas" #hard-coded for now
