@@ -85,7 +85,7 @@ class HTTPClient(object):
             self.connect(x[0], 80)
         #print("flag 2")
 
-        package = "GET " + z + " HTTP/1.1\r\nHost: " + x[0] + "\r\nAccept: */*\r\nAccept-Language: en-US,en;q=0.5\r\nConnection: keep-alive\r\nUpgrade-Insecure-Requests: 1\r\nDNT: 1\r\n\r\n"
+        package = "GET " + z + " HTTP/1.1\r\nHost: " + x[0] + "\r\nAccept: */*\r\nAccept-Language: en-US,en;q=0.5\r\nConnection: close\r\nUpgrade-Insecure-Requests: 1\r\nDNT: 1\r\n\r\n"
 
         #print("package:", package)
             
