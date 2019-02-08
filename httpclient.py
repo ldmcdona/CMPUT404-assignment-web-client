@@ -71,7 +71,10 @@ class HTTPClient(object):
     def GET(self, url, args=None):
         #print("type:", type(url))
         o = urllib.parse.urlparse(url)
-        z = o.path
+        if o.path == "":
+            z = "/"
+        else:
+            z = o.path
         x = o.netloc.split(":")
         #print("flag 1")
         #print(o)
@@ -82,7 +85,10 @@ class HTTPClient(object):
             self.connect(x[0], 80)
         #print("flag 2")
 
-        package = "GET " + z + " HTTP/1.1\r\nHost: " + x[0] + "\r\nAccept: application/json\r\nAccept-Language: en-us\r\nContent-Type: application/json\r\n\r\n"
+        package = "GET " + z + " HTTP/1.1\r\nHost: " + x[0] + "\r\nAccept: */*\r\nAccept-Language: en-US,en;q=0.5\r\nConnection: keep-alive\r\nUpgrade-Insecure-Requests: 1\r\nDNT: 1\r\n\r\n"
+
+        #print("package:", package)
+            
         self.sendall(package)
 
         #print("flag 3")
@@ -142,8 +148,8 @@ class HTTPClient(object):
                 p += item + "=" + args[item] + "&"
             p = p[:-1]
             q = len(p)
-            print("q", q)
-            print(p)
+            #print("q", q)
+            #print(p)
             package = "POST " + z + " HTTP/1.1\r\nHost:" + x[0] + "\r\nContent-Length:" + str(q) + "\r\n\r\n" + p
         self.sendall(package)
 
@@ -151,13 +157,13 @@ class HTTPClient(object):
        
         #print("----")
         #print(args)
-        print("----")
-        print("POST")
-        print("----")
+        #print("----")
+        #print("POST")
+        #print("----")
         #print(package)
         #print("----")
-        print(answer)
-        print("----")     
+        #print(answer)
+        #print("----")     
 
         #Might wanna change the error check to something more general use
         if re.search("200 OK", answer) == None:
